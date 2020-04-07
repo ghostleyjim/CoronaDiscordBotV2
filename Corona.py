@@ -2,9 +2,7 @@ def dataextract():
     with open('rivm_NL_covid19_hosp_municipality.csv', 'r') as database:
 
         seperate = (line for line in database)
-        hospitalized_municipality = {}
-        hospitalized_province = {}
-
+        next(seperate)
         for x in seperate:
             result = x.lower()
             info = result.split(',')
@@ -16,17 +14,14 @@ def dataextract():
 
             municipality = info[ 1 ]
             province = info[3]
-            cases = int((info[ 4 ].lower()).strip('\n'))
-
-            hospitalized_municipality.setdefault(municipality, []).append(cases)
-
-            # if [month, day]
-            # hospitalized_province.setdefault(province, []).append(cases)
+            cases = int((info[ 4 ]).strip('\n'))
 
 
 
 
-        # municipality = 'delft'  #  # if municipality in hospitalized:  #     print(hospitalized[municipality])  # else:  #     print('not found')
+
+
+
 
 
 dataextract()
