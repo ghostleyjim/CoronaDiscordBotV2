@@ -1,0 +1,1 @@
+dir_hosp_municipality = rivm_NL_covid19_hosp_municipality.csv, dir_NL_total = rivm_NL_covid19_national.csv, dir_nice = nice_ic_by_day.csv

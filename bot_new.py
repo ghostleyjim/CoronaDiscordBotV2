@@ -3,7 +3,10 @@
 import discord
 from dotenv import load_dotenv
 import os
-import Corona
+import datetime
+from threading import Timer
+# import Corona
+import scraper
 
 trigger = '!corona'
 
@@ -33,10 +36,8 @@ async def on_message(message):  # if I reveive a message
         del(split_msg[0])
         print(split_msg)
 
-
-#todo run scraper once per day
-
-
+Timer(1, scraper.timecheck).start()
 
 
 client.run(TOKEN)  # run the client and login with secret
+#todo run scraper once per day
