@@ -32,9 +32,9 @@ async def on_message(message):  # if I reveive a message
         split_msg = incomming.split(' ')
         del(split_msg[0])
         print(split_msg)
-        x = find.input(split_msg)
 
 
+#todo run scraper once per day
 
 
 
