@@ -3,6 +3,9 @@ def dataextract():
 
         seperate = (line for line in database)
         next(seperate)
+        hospitalized_municipality = {}
+        hospitalized_province = {}
+
         for x in seperate:
             result = x.lower()
             info = result.split(',')
@@ -14,14 +17,17 @@ def dataextract():
 
             municipality = info[ 1 ]
             province = info[3]
-            cases = int((info[ 4 ]).strip('\n'))
+            cases = int((info[ 4 ].lower()).strip('\n'))
+
+            hospitalized_municipality.setdefault(municipality, []).append(cases)
+
+            # if [month, day]
+            # hospitalized_province.setdefault(province, []).append(cases)
 
 
 
 
-
-
-
+        # municipality = 'delft'  #  # if municipality in hospitalized:  #     print(hospitalized[municipality])  # else:  #     print('not found')
 
 
 dataextract()
