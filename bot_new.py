@@ -31,7 +31,13 @@ async def on_message(message):  # if I reveive a message
             del(split_msg[0:2])
             if len(split_msg) < 2:
                 split_msg.append('0')
-            send_ready = scraper.returnmunicipality(split_msg[ 0 ], split_msg[ 1 ])
+
+            try:
+                send_ready = scraper.returnmunicipality(split_msg[ 0 ], split_msg[ 1 ])
+
+            except:
+                send_ready = "Error, municipality is unknown"
+
             await message.channel.send(send_ready)
 
     elif incomming.startswith(trigger):
@@ -39,7 +45,11 @@ async def on_message(message):  # if I reveive a message
         del(split_msg[0])
         if len(split_msg) < 2:
             split_msg.append('0')
-        send_ready = scraper.returnmunicipality(split_msg[0], split_msg[1])
+        try:
+            send_ready = scraper.returnmunicipality(split_msg[0], split_msg[1])
+
+        except:
+            send_ready = "Error, municipality is unknown"
         await message.channel.send(send_ready)
 
 

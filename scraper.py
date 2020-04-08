@@ -136,9 +136,9 @@ def returnmunicipality(municipality, days):
         try:
             difference = int(arrSorted[0][2]) - int(arrSorted[days][2])
             if difference > 0:
-                return (f"{municipality}, {days} days ago:\nToday there are {difference} more hospitalities as on {arrSorted[days][0]} in {arrSorted[days][1]}")
+                return (f"{municipality}, {days} days ago:\nToday there have been {difference} more people hospitalized as on {arrSorted[days][0]} in {arrSorted[days][1]}.\nToday there has been {arrSorted[0][2]} people hospitalized")
             else:
-                return (f"{municipality}, {days} days ago:\nToday there are {abs(difference)} less hospitalities as on {arrSorted[days][0]} in {arrSorted[days][1]}")
+                return (f"{municipality}, {days} days ago:\nToday there have been {abs(difference)} less people hospitalized as on {arrSorted[days][0]} in {arrSorted[days][1]}.\nToday there has been {arrSorted[0][2]} people hospitalized")
 
         except:
             if days == 1:
@@ -146,6 +146,6 @@ def returnmunicipality(municipality, days):
             else:
                 return (f"No data available from {days} days ago for {arrSorted[0][1]}")
     else:
-        return (f"{municipality}, {arrSorted[0][0]}:\nThere are {arrSorted[0][2]} hospitalities in {arrSorted[0][1]} on {arrSorted[0][0]}")
+        return (f"{municipality}, {arrSorted[0][0]}:\nThere has been {arrSorted[0][2]} hospitalized in {arrSorted[0][1]} on {arrSorted[0][0]}")
 
 #print(returnmunicipality("rOtTerdam","0"))
