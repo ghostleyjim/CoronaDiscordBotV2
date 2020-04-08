@@ -11,7 +11,7 @@ last_update = 0
 
 
 #
-# #todo dit afmaken!
+#todo dit afmaken!
 # def timecheck():
 #     print(last_update)
 #     clock = datetime.datetime.today().day
@@ -38,7 +38,7 @@ def database_scrape():
     #list for raw repositories add , + <url> when new repo's used
     page = [ 'https://raw.githubusercontent.com/J535D165/CoronaWatchNL/master/data/rivm_NL_covid19_hosp_municipality.csv',
              'https://raw.githubusercontent.com/J535D165/CoronaWatchNL/master/data/rivm_NL_covid19_national.csv',
-             'https://raw.githubusercontent.com/J535D165/CoronaWatchNL/master/data/nice_ic_by_day.csv' ]
+             'https://raw.githubusercontent.com/J535D165/CoronaWatchNL/master/data/nice_ic_by_day.csv']
 
     # download new files
     directory = [ ]
