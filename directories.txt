@@ -1,0 +1,3 @@
+./data/rivm_NL_covid19_hosp_municipality.csv
+./data/rivm_NL_covid19_national.csv
+./data/nice_ic_by_day.csv

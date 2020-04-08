@@ -40,4 +40,4 @@ Timer(1, scraper.timecheck).start()
 
 
 client.run(TOKEN)  # run the client and login with secret
-#todo run scraper once per day
+

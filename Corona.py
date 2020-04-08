@@ -5,6 +5,17 @@ import scraper
 municipalities = []
 provinces = []
 
+#database file directories
+with open('directories.txt', 'r') as directorylist:
+    directories = [ ]
+    read = (line for line in directorylist)
+    for lines in read:
+        directories.append(lines.strip('\n'))
+
+mun_data = directories[0]
+NL_data = directories[1]
+nice_data = directories[3]
+
 class municipality:
     def __init__(self, date, name, code, province, hospitalised):
         self.date = date
