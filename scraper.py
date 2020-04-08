@@ -103,7 +103,7 @@ def dataextract():
             rowDay = int(readDate[2])
             rowDate = datetime.date(rowYear, rowMonth, rowDay)
 
-            municipalities.append(municipality(rowDate, row[1],row[2],row[3],row[4]))
+            municipalities.append(municipality(rowDate, row[1].lower(),row[2],row[3].lower(),row[4]))
 
             provinceExist = False
             for i in range(len(provinces)):
@@ -120,7 +120,7 @@ def returnmunicipality(municipality, days):
     dataextract()
 
     arrMunici = []
-    municipality = municipality
+    municipality = municipality.lower()
     days = int(days)
 
     for i in range(len(municipalities)):
@@ -129,8 +129,8 @@ def returnmunicipality(municipality, days):
 
     arrSorted = sorted(arrMunici, key=lambda arrMunici: arrMunici[0], reverse=True)
 
-    for x in range(len(arrSorted)):
-        print(arrSorted[x][0], arrSorted[x][1], arrSorted[x][2])
+    # for x in range(len(arrSorted)):
+    #     print(arrSorted[x][0], arrSorted[x][1], arrSorted[x][2])
 
     if days != 0:
         try:
@@ -148,6 +148,4 @@ def returnmunicipality(municipality, days):
     else:
         return (f"{municipality}, {arrSorted[0][0]}:\nThere are {arrSorted[0][2]} hospitalities in {arrSorted[0][1]} on {arrSorted[0][0]}")
 
-#database_scrape()
-
-print(returnmunicipality("Rotterdam", "0"))
+#print(returnmunicipality("rOtTerdam","0"))
