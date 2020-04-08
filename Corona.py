@@ -14,7 +14,7 @@ with open('directories.txt', 'r') as directorylist:
 
 mun_data = directories[0]
 NL_data = directories[1]
-nice_data = directories[3]
+#nice_data = directories[3]
 
 class municipality:
     def __init__(self, date, name, code, province, hospitalised):
@@ -63,24 +63,44 @@ def returnmunicipality(municipality, days):
     global municipalities
     arrMunici = []
     municipality = municipality
-    days = days
+    days = int(days)
 
     today = datetime.date.today()   # Uiteindelijk deze regel gaan gebruiken
 
     for i in range(len(municipalities)):
         if municipalities[i].name == municipality:
-            arrMunici.append([municipalities[i].date, municipalities[i].name])
+            arrMunici.append([municipalities[i].date, municipalities[i].name, municipalities[i].hospitalised])
 
     arrSorted = sorted(arrMunici, key=lambda arrMunici: arrMunici[0], reverse=True)
 
-    for i in range(len(municipalities)):
-        if municipalities[i].name == municipality and municipalities[i].date == arrSorted[0][0]:
-            arrMunici.append([municipalities[i].date, municipalities[i].name])
-            return(municipalities[i].date, municipalities[i].name, municipalities[i].hospitalised)
+    for x in range(len(arrSorted)):
+        print(arrSorted[x][0], arrSorted[x][1], arrSorted[x][2])
+
+    if days != 0:
+        try:
+            # arrSorted[days][0]
+            # back = arrSorted[days][2]
+            # difference = arrSorted[0][2] - arrSorted[days][2]
+            # return ("In " + str(arrSorted[0][1]) + " waren er " + str(difference) + " minder gevallen dan vandaag")
+            return (arrSorted[days][1], arrSorted[days][0], arrSorted[days][2], arrSorted[0][0], arrSorted[0][2])
+
+        except:
+            if days == 1:
+                return ("No data availible from " + str(days) + " day ago")
+            else:
+                return ("No data availible from " + str(days) + " days ago")
+    else:
+        return (arrSorted[0][0], arrSorted[0][1], arrSorted[0][2])
+
+
+    # for i in range(len(municipalities)):
+    #     if municipalities[i].name == municipality and municipalities[i].date == arrSorted[0][0]:
+    #         arrMunici.append([municipalities[i].date, municipalities[i].name])
+    #         return(municipalities[i].date, municipalities[i].name, municipalities[i].hospitalised)
 
 dataextract()
 
 #todo controle toevoegen of een gemeente in de database voorkomt
 #todo als er geen aantal dagen wordt meegegeven dan "0" ipv aantal dagen gebruiken
 #todo in bericht naar gebruiker aangeven van wanneer de gegeven data is
-print(returnmunicipality("Almere", "0"))
+print(returnmunicipality("Almere", "2"))
