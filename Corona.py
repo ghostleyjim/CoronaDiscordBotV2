@@ -100,7 +100,4 @@ def returnmunicipality(municipality, days):
 
 dataextract()
 
-#todo controle toevoegen of een gemeente in de database voorkomt
-#todo als er geen aantal dagen wordt meegegeven dan "0" ipv aantal dagen gebruiken
-#todo in bericht naar gebruiker aangeven van wanneer de gegeven data is
 print(returnmunicipality("Almere", "2"))
