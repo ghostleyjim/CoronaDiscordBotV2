@@ -1,4 +1,4 @@
-#!usr/bin/env python3
+#!usr/bin/.env python3
 
 import discord
 from dotenv import load_dotenv
@@ -10,7 +10,7 @@ import scraper
 
 trigger = '!corona'
 
-load_dotenv()  # load the secret from the .env file
+load_dotenv()  # load the secret from the ..env file
 TOKEN = os.getenv('DISCORD_TOKEN')  # variable token stores the secret
 PASTEAPI = os.getenv('PASTEBIN_TOKEN')
 PASTEUSERKEY = os.getenv('PASTEBIN_USERKEY')

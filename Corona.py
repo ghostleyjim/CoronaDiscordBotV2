@@ -46,8 +46,6 @@ def dataextract():
             rowDay = int(readDate[2])
             rowDate = datetime.date(rowYear, rowMonth, rowDay)
 
-            # print(dateRow - datetime.timedelta(days=4))
-
             municipalities.append(municipality(rowDate, row[1],row[2],row[3],row[4]))
 
             provinceExist = False
