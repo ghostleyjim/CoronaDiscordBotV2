@@ -29,14 +29,20 @@ async def on_message(message):  # if I reveive a message
         split_msg = incomming.split(' ')
         if split_msg[1] == trigger:
             del(split_msg[0:2])
-            #print(split_msg)
+            if len(split_msg) < 2:
+                split_msg.append('0')
+            send_ready = scraper.returnmunicipality(split_msg[ 0 ], split_msg[ 1 ])
+            await message.channel.send(send_ready)
 
     elif incomming.startswith(trigger):
         split_msg = incomming.split(' ')
         del(split_msg[0])
-        print(split_msg)
+        if len(split_msg) < 2:
+            split_msg.append('0')
+        send_ready = scraper.returnmunicipality(split_msg[0], split_msg[1])
+        await message.channel.send(send_ready)
 
-Timer(1, scraper.timecheck).start()
+
 
 
 client.run(TOKEN)  # run the client and login with secret
