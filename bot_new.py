@@ -6,7 +6,7 @@ import os
 import datetime
 from threading import Timer
 # import Corona
-import scraper
+import scraper, plotNiceValues
 
 trigger = '!corona'
 
@@ -45,15 +45,33 @@ async def on_message(message):  # if I reveive a message
         del(split_msg[0])
         if len(split_msg) < 2:
             split_msg.append('0')
-        try:
-            send_ready = scraper.returnmunicipality(split_msg[0], split_msg[1])
 
-        except:
-            send_ready = "Error, municipality is unknown"
-        await message.channel.send(send_ready)
+        if split_msg[0].lower() == "graph":
+            try:
+                done = False
+                graph1 = ""
+                graph2 = ""
+                while not done:
+                    graph1 = plotNiceValues.createGraphs()[1]
+                    graph2 = plotNiceValues.createGraphs()[2]
+                    done = plotNiceValues.createGraphs()[0]
 
+                my_files = [
+                    discord.File(graph1, 'graph1.png'),
+                    discord.File(graph2, 'graph2.png'),
+                ]
 
+                await message.channel.send('Graphs created', files=my_files)
+            except:
+                await message.channel.send("Error in creating graphs")
 
+        else:
+            try:
+                send_ready = scraper.returnmunicipality(split_msg[0], split_msg[1])
+            except:
+                send_ready = "Error, municipality is unknown"
+
+            await message.channel.send(send_ready)
 
 client.run(TOKEN)  # run the client and login with secret
 
