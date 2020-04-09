@@ -1,12 +1,13 @@
 import csv
 import datetime
-import scraper
+
+# import scraper
 
 municipalities = []
 provinces = []
 
 #database file directories
-with open('directories.txt', 'r') as directorylist:
+with open('../directories.txt', 'r') as directorylist:
     directories = [ ]
     read = (line for line in directorylist)
     for lines in read:
@@ -31,26 +32,26 @@ class province:
 
 def dataextract():
     global municipalities, provinces
-    with open('testcsv.csv', 'r') as csvfile:
-        has_header = csv.Sniffer().has_header(csvfile.read(1024))   # Check if there is a header present
-        csvfile.seek(0)                                             # Go back to line 0 in CSV file
-        readCSV = csv.reader(csvfile, delimiter=',')                # Read .CSV file
+    with open('../testcsv.csv', 'r') as csvfile:
+        has_header = csv.Sniffer().has_header(csvfile.read(1024))  # Check if there is a header present
+        csvfile.seek(0)  # Go back to line 0 in CSV file
+        readCSV = csv.reader(csvfile, delimiter=',')  # Read .CSV file
 
         if has_header:
             next(readCSV)
 
         for row in readCSV:
-            readDate = row[0].split("-")
-            rowYear = int(readDate[0])
-            rowMonth = int(readDate[1])
-            rowDay = int(readDate[2])
+            readDate = row[ 0 ].split("-")
+            rowYear = int(readDate[ 0 ])
+            rowMonth = int(readDate[ 1 ])
+            rowDay = int(readDate[ 2 ])
             rowDate = datetime.date(rowYear, rowMonth, rowDay)
 
-            municipalities.append(municipality(rowDate, row[1],row[2],row[3],row[4]))
+            municipalities.append(municipality(rowDate, row[ 1 ], row[ 2 ], row[ 3 ], row[ 4 ]))
 
             provinceExist = False
             for i in range(len(provinces)):
-                if provinces[i].name == row[3]:
+                if provinces[ i ].name == row[ 3 ]:
                     provinceExist = True
                     provinces[i].hospitalised += int(row[4])
 
