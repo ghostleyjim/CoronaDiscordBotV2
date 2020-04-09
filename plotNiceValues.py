@@ -31,7 +31,7 @@ def createGraphs():
             y4.append(int(row[6]))
 
     # Create graph one
-    fileName1 = "graphs/IntensiveCare.png"
+    fileName1 = "./graphs/IntensiveCare.png"
     fig, ax1 = plt.subplots()
     color = 'tab:blue'
     ax1.set_xlabel('date')
@@ -46,19 +46,18 @@ def createGraphs():
     ax2.tick_params(axis='y', labelcolor=color)
     plt.title('Intensive Care')
     plt.show()
-    fig.savefig(fileName1)
+    plt.savefig(fileName1)
 
     # Create graph two
-    fileName2 = "graphs/LeavingIntensiveCare.png"
-    graph = plt.figure()
+    fileName2 = "./graphs/LeavingIntensiveCare.png"
     plt.plot(x, y1, color='tab:red', label='Intake (Cumulative)')
     plt.plot(x, y3, color='tab:blue', label='Deaths (Cumulative)')
-    plt.plot(x, y4, color='tab:green', label='Recoverd (Cumulative)')
+    plt.plot(x, y4, color='tab:green', label='Recovered (Cumulative)')
     plt.tick_params(axis='x', rotation=45)
     plt.title('Leaving Intensive Care')
     plt.legend()
     plt.show()
-    graph.savefig(fileName2)
+    plt.savefig(fileName2)
     return (True, fileName1, fileName2)
 
 createGraphs()
