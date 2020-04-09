@@ -1,1 +1,0 @@
-['rivm_NL_covid19_hosp_municipality.csv', 'rivm_NL_covid19_national.csv', 'nice_ic_by_day.csv']

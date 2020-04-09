@@ -1,9 +1,9 @@
-#!usr/bin/.env python3
+#!usr/bin/env python3
 import csv
 import wget
 import os
 import datetime
-from threading import Timer
+import timedevents
 
 municipalities = []
 provinces = []
@@ -82,8 +82,7 @@ def database_scrape():
                 save_file += directory[ x ]
         print(save_file, file=directorylist, end='')
 
-    with open('config.txt', 'r+') as config:
-        pass
+        timedevents.timer()
 
 def dataextract():
     global municipalities, provinces

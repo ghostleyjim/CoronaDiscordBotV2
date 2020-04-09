@@ -1,12 +1,10 @@
-#!usr/bin/.env python3
+#!usr/bin/env python3
 
 import discord
 from dotenv import load_dotenv
 import os
-import datetime
-from threading import Timer
 # import Corona
-import scraper, plotNiceValues
+import scraper, plotNiceValues, timedevents
 
 trigger = '!corona'
 
@@ -68,11 +66,14 @@ async def on_message(message):  # if I reveive a message
 
         else:
             try:
-                send_ready = scraper.returnmunicipality(split_msg[0], split_msg[1])
+                send_ready = scraper.returnmunicipality(split_msg[ 0 ], split_msg[ 1 ])
             except:
                 send_ready = "Error, municipality is unknown"
 
             await message.channel.send(send_ready)
 
-client.run(TOKEN)  # run the client and login with secret
 
+scraper.database_scrape()
+timedevents.timer()
+
+client.run(TOKEN)  # run the client and login with secret
