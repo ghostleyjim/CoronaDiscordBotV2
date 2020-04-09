@@ -62,6 +62,7 @@ async def on_message(message):  # if I reveive a message
                 ]
 
                 await message.channel.send('Graphs created', files=my_files)
+
             except:
                 await message.channel.send("Error in creating graphs")
 

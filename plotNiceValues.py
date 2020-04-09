@@ -43,18 +43,21 @@ def createGraphs():
     ax2.set_ylabel('new patients', color=color)
     ax2.plot(x, y2, color=color)
     ax2.tick_params(axis='y', labelcolor=color)
-    plt.title('Intesive Care')
+    plt.title('Intensive Care')
     plt.show()
     fig.savefig(fileName1)
 
     # Create graph two
     fileName2 = "graphs/LeavingIntensiveCare.png"
     graph = plt.figure()
-    plt.plot(x, y3, color='tab:blue', label='Deaths')
-    plt.plot(x, y4, color='tab:red', label='Recoverd')
+    plt.plot(x, y1, color='tab:red', label='Intake (Cumulative)')
+    plt.plot(x, y3, color='tab:blue', label='Deaths (Cumulative)')
+    plt.plot(x, y4, color='tab:green', label='Recoverd (Cumulative)')
     plt.tick_params(axis='x', rotation=45)
     plt.title('Leaving Intensive Care')
     plt.legend()
     plt.show()
     graph.savefig(fileName2)
     return (True, fileName1, fileName2)
+
+createGraphs()
