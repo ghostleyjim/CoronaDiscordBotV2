@@ -131,7 +131,6 @@ def returnmunicipality(municipality, days):
 
     municipality = municipality.lower()
     days = int(days)
-    print(days)
 
     # Add values to a new temporary array
     for i in range(len(municipalities)):
@@ -140,17 +139,11 @@ def returnmunicipality(municipality, days):
 
     # Create a new array with sorted values of temporary array
     arrSorted = sorted(arrMunici, key=lambda arrMunici: arrMunici[0], reverse=True)
-    for x in range(len(arrSorted)):
-         print(arrSorted[x][0], arrSorted[x][1], arrSorted[x][2])
 
-    print(len(municipalities))
-    print(len(arrSorted))
     # Return data to bot_new.py
     if days != 0:
         try:
             difference = int(arrSorted[0][2]) - int(arrSorted[days][2])
-            print(arrSorted[0][0], arrSorted[0][2])
-            print(arrSorted[days][0], arrSorted[days][2])
 
             if difference > 0:
                 return (f"{municipality.capitalize()}, {days} days ago:\n"
@@ -169,5 +162,3 @@ def returnmunicipality(municipality, days):
     else:
         return (f"{municipality.capitalize()}, {arrSorted[0][0]}:\n"
                 f"There has been {arrSorted[0][2]} hospitalised in {arrSorted[0][1].capitalize()} on {arrSorted[0][0]}.")
-
-#print(returnmunicipality("rOtTerdam","0"))
