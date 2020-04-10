@@ -24,19 +24,21 @@ async def on_message(message):  # if I reveive a message
     incomming = message.content
 
     if incomming.startswith("<"):
-        split_msg = incomming.split(' ')
-        if split_msg[1] == trigger:
-            del(split_msg[0:2])
-            if len(split_msg) < 2:
-                split_msg.append('0')
-
-            try:
-                send_ready = scraper.returnmunicipality(split_msg[0], split_msg[1])
-
-            except:
-                send_ready = "Error, municipality is unknown"
-
-            await message.channel.send(send_ready)
+        send_ready = "Doe eens lekker normaal joh!"
+        await message.channel.send(send_ready)
+        # split_msg = incomming.split(' ')
+        # if split_msg[1] == trigger:
+        #     del(split_msg[0:2])
+        #     if len(split_msg) < 2:
+        #         split_msg.append('0')
+        #
+        #     try:
+        #         send_ready = scraper.returnmunicipality(split_msg[0], split_msg[1])
+        #
+        #     except:
+        #         send_ready = "Error, municipality is unknown"
+        #
+        #     await message.channel.send(send_ready)
 
     elif incomming.startswith(trigger):
         municipality_value = []
@@ -77,7 +79,7 @@ async def on_message(message):  # if I reveive a message
             else:
                 send_ready = "Error, municipality is unknown"
 
-            await message.channel.send(send_ready)  # todo: dit stuk ook bij < maken misschien een def??
+            await message.channel.send(send_ready)  # todo: dit stuk ook bij < maken misschien een def?? <-- Gefixt, zie regel 27 en 28 ;-)
 
 
 scraper.database_scrape()
