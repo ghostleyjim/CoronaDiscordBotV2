@@ -60,7 +60,7 @@ async def on_message(message):  # if I reveive a message
 
                     my_files = [ discord.File(graph1, 'graph1.png'), discord.File(graph2, 'graph2.png') ]
 
-                    await message.channel.send('Graphs created:', files=my_files)
+                    await message.channel.send('Graphs created: ', files=my_files)
                 except:
                     errormsg = "Error in creating graphs"
                     await message.channel.send(errormsg)
