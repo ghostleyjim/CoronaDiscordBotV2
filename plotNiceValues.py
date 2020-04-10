@@ -45,7 +45,7 @@ def createGraphs():
     ax2.plot(x, y2, color=color)
     ax2.tick_params(axis='y', labelcolor=color)
     plt.title('Intensive Care')
-    plt.show()
+    # plt.show()
     plt.savefig(fileName1)
 
     # Create graph two
@@ -56,7 +56,7 @@ def createGraphs():
     plt.tick_params(axis='x', rotation=45)
     plt.title('Leaving Intensive Care')
     plt.legend()
-    plt.show()
+    # plt.show()
     plt.savefig(fileName2)
     return (True, fileName1, fileName2)
 
