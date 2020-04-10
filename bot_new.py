@@ -31,7 +31,7 @@ async def on_message(message):  # if I reveive a message
                 split_msg.append('0')
 
             try:
-                send_ready = scraper.returnmunicipality(split_msg[ 0 ], split_msg[ 1 ])
+                send_ready = scraper.returnmunicipality(split_msg[0], split_msg[1])
 
             except:
                 send_ready = "Error, municipality is unknown"
@@ -39,48 +39,45 @@ async def on_message(message):  # if I reveive a message
             await message.channel.send(send_ready)
 
     elif incomming.startswith(trigger):
-        municipality_value = [ ]
+        municipality_value = []
         request_value = 0
 
         split_msg = incomming.split(' ')
-        del (split_msg[ 0 ])
+        del (split_msg[0])
         msglength = len(split_msg)
 
-        for x in range(msglength):
-            if "graph" == split_msg[ x ]:
-                try:
-                    done = False
-                    graph1 = ""
-                    graph2 = ""
-                    while not done:
-                        graph1 = plotNiceValues.createGraphs()[ 1 ]
-                        graph2 = plotNiceValues.createGraphs()[ 2 ]
-                        done = plotNiceValues.createGraphs()[ 0 ]
+        if split_msg[0] == "graph":
+            try:
+                grpahs = plotNiceValues.createGraphs()
+                graph1 = grpahs[1]
+                graph2 = grpahs[2]
 
-                    my_files = [ discord.File(graph1, 'graph1.png'), discord.File(graph2, 'graph2.png'), ]
+                my_files = [discord.File(graph1, 'graph1.png'), discord.File(graph2, 'graph2.png')]
 
-                    await message.channel.send('Graphs created', files=my_files)
+                await message.channel.send('Graphs created by Diver', files=my_files)
 
-                except:
-                    await message.channel.send("Error in creating graphs")
+            except:
+                await message.channel.send("Error in creating graphs")
 
-            elif split_msg[ x ].startswith("-"):
-                if split_msg[ x ][ 1: ].isdigit():
-                    request_value = split_msg[ x ][ 1: ]
-            elif split_msg[ x ].isdigit():
-                request_value = split_msg[ x ]
-
-            else:
-                municipality_value.append(split_msg[ x ])
-
-        length = len(municipality_value)
-        if length > 0:
-            location = ' '.join(municipality_value).lower()
-            send_ready = scraper.returnmunicipality(location, request_value)
         else:
-            send_ready = "Error, municipality is unknown"
+            for x in range(msglength):
+                if split_msg[x].startswith("-"):
+                    if split_msg[x][1:].isdigit():
+                        request_value = split_msg[x][1:]
+                elif split_msg[x].isdigit():
+                    request_value = split_msg[x]
 
-        await message.channel.send(send_ready)  # todo: dit stuk ook bij < maken misschien een def??
+                else:
+                    municipality_value.append(split_msg[x])
+
+            length = len(municipality_value)
+            if length > 0:
+                location = ' '.join(municipality_value).lower()
+                send_ready = scraper.returnmunicipality(location, request_value)
+            else:
+                send_ready = "Error, municipality is unknown"
+
+            await message.channel.send(send_ready)  # todo: dit stuk ook bij < maken misschien een def??
 
 
 scraper.database_scrape()
