@@ -153,26 +153,21 @@ def returnmunicipality(municipality, days):
             print(arrSorted[days][0], arrSorted[days][2])
 
             if difference > 0:
-                return (f"Divers version: \n"
-                        f"{municipality.capitalize()}, {days} days ago:\n"
+                return (f"{municipality.capitalize()}, {days} days ago:\n"
                         f"Today there have been {difference} more people hospitalised as on {arrSorted[days][0]} in {arrSorted[days][1].capitalize()}.\n"
                         f"Today there has been {arrSorted[0][2]} people hospitalised.")
             else:
-                return (f"Divers version: \n"
-                        f"{municipality.capitalize()}, {days} days ago:\n"
+                return (f"{municipality.capitalize()}, {days} days ago:\n"
                         f"Today there have been {abs(difference)} less people hospitalised as on {arrSorted[days][0]} in {arrSorted[days][1].capitalize()}.\n"
                         f"Today there has been {arrSorted[0][2]} people hospitalised.")
 
         except:
             if days == 1:
-                return (f"Divers version: \n"
-                        f"No data available from {days} day ago for {arrSorted[0][1]}.")
+                return (f"No data available from {days} day ago for {arrSorted[0][1]}.")
             else:
-                return (f"Divers version: \n"
-                        f"No data available from {days} days ago for {arrSorted[0][1]}.")
+                return (f"No data available from {days} days ago for {arrSorted[0][1]}.")
     else:
-        return (f"Divers version: \n"
-                f"{municipality.capitalize()}, {arrSorted[0][0]}:\n"
+        return (f"{municipality.capitalize()}, {arrSorted[0][0]}:\n"
                 f"There has been {arrSorted[0][2]} hospitalised in {arrSorted[0][1].capitalize()} on {arrSorted[0][0]}.")
 
 #print(returnmunicipality("rOtTerdam","0"))
