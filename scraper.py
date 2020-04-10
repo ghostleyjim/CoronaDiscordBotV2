@@ -1,9 +1,9 @@
-#!/usr/bin/env python3
+#!usr/bin/.env python3
 import csv
 import wget
 import os
 import datetime
-import timedevents
+from threading import Timer
 
 municipalities = []
 provinces = []
@@ -82,7 +82,8 @@ def database_scrape():
                 save_file += directory[ x ]
         print(save_file, file=directorylist, end='')
 
-        timedevents.timer()
+    with open('config.txt', 'r+') as config:
+        pass
 
 def dataextract():
     global municipalities, provinces
@@ -135,17 +136,16 @@ def returnmunicipality(municipality, days):
         try:
             difference = int(arrSorted[0][2]) - int(arrSorted[days][2])
             if difference > 0:
-                return (f"{municipality.capitalize()}, {days} days ago:\nToday there have been {difference} more people hospitalized as on {arrSorted[days][0]} in {arrSorted[days][1].capitalize()}.\nToday there has been {arrSorted[0][2]} people hospitalized.")
+                return (f"{municipality.capitalize()}, {days} days ago:\nToday there have been {difference} more people hospitalised as on {arrSorted[days][0]} in {arrSorted[days][1].capitalize()}.\nToday there has been {arrSorted[0][2]} people hospitalised.")
             else:
-                return (f"{municipality.capitalize()}, {days} days ago:\nToday there have been {abs(difference)} less people hospitalized as on {arrSorted[ days ][ 0 ]} in {arrSorted[ days ][ 1 ].capitalize()}.\nToday there has been {arrSorted[ 0 ][ 2 ]} people hospitalized.")
+                return (f"{municipality.capitalize()}, {days} days ago:\nToday there have been {abs(difference)} less people hospitalised as on {arrSorted[days][0]} in {arrSorted[days][1].capitalize()}.\nToday there has been {arrSorted[0][2]} people hospitalised.")
 
         except:
             if days == 1:
-                return (f"No data available from {days} day ago for {arrSorted[ 0 ][ 1 ]}.")
+                return (f"No data available from {days} day ago for {arrSorted[0][1]}.")
             else:
-                return (f"No data available from {days} days ago for {arrSorted[ 0 ][ 1 ]}.")
+                return (f"No data available from {days} days ago for {arrSorted[0][1]}.")
     else:
-        return (f"{municipality.capitalize()}, {arrSorted[ 0 ][ 0 ]}:\nThere has been {arrSorted[ 0 ][ 2 ]} hospitalized in {arrSorted[ 0 ][ 1 ].capitalize()} on {arrSorted[ 0 ][ 0 ]}.")
+        return (f"{municipality.capitalize()}, {arrSorted[0][0]}:\nThere has been {arrSorted[0][2]} hospitalised in {arrSorted[0][1].capitalize()} on {arrSorted[0][0]}.")
 
-# todo probleem als municipality niet bestaat maar wel een dagwaarde heeft array error
-# print(returnmunicipality("rOtTerdam","1"))
+#print(returnmunicipality("rOtTerdam","0"))
