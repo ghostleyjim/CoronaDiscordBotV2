@@ -61,7 +61,6 @@ def database_scrape():
     except:
         pass
 
-    #todo check voor meer links
     #list for raw repositories add , + <url> when new repo's used
     page = [ 'https://raw.githubusercontent.com/J535D165/CoronaWatchNL/master/data/rivm_NL_covid19_hosp_municipality.csv',
              'https://raw.githubusercontent.com/J535D165/CoronaWatchNL/master/data/rivm_NL_covid19_national.csv',
@@ -135,7 +134,7 @@ def returnmunicipality(municipality, days):
         try:
             difference = int(arrSorted[ 0 ][ 2 ]) - int(arrSorted[ days ][ 2 ])
             if difference > 0:
-                return (f"{municipality.capitalize()}, {days} days ago:\nToday there have been {difference} more people hospitalized as on {arrSorted[ days ][ 0 ]} in {arrSorted[ days ][ 1 ].capitalize()}.\nToday there has been {arrSorted[ 0 ][ 2 ]} people hospitalized.")
+                return (f"{municipality.capitalize()}, {days} days ago:\nToday there have been {abs(difference)} more people hospitalized as on {arrSorted[ days ][ 0 ]} in {arrSorted[ days ][ 1 ].capitalize()}.\nToday there has been {arrSorted[ 0 ][ 2 ]} people hospitalized.")
             else:
                 return (f"{municipality.capitalize()}, {days} days ago:\nToday there have been {abs(difference)} less people hospitalized as on {arrSorted[ days ][ 0 ]} in {arrSorted[ days ][ 1 ].capitalize()}.\nToday there has been {arrSorted[ 0 ][ 2 ]} people hospitalized.")
 

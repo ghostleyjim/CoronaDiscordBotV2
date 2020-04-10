@@ -15,7 +15,7 @@ PASTEUSERKEY = os.getenv('PASTEBIN_USERKEY')
 client = discord.Client()  # variable to store client info
 
 
-def inputparser(split_msg, message):
+def inputparser(split_msg):
     request_value = 0
     msglength = len(split_msg)
     municipality_value = [ ]
