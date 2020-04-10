@@ -68,9 +68,6 @@ async def on_message(message):  # if I reveive a message
                 send_ready = inputparser(split_msg)
                 await message.channel.send(send_ready)
 
-
-
-
     elif incomming.startswith(trigger):
         split_msg = incomming.split(' ')
         del (split_msg[ 0 ])
