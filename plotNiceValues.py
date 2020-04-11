@@ -56,11 +56,24 @@ def createGraphs():
             temp = int(deaths[i, 1]) - int(deaths[i-1, 1])
             dailyDeaths = np.append(dailyDeaths, [[deaths[i, 0], temp]], axis=0)
 
+        # Remove first two entries because they are worthless
         dailyTotals = np.delete(dailyTotals, [0,1], 0)
         dailyHospital = np.delete(dailyHospital, [0, 1], 0)
         dailyDeaths = np.delete(dailyDeaths, [0, 1], 0)
 
         # Find max values
+        maxTotal = max(totals[:, 1])  # Find highest number
+        tempDaily = np.where(totals[:, 1] == maxTotal)  # Find location of highest number
+        whenTot = totals[tempDaily[int(len(tempDaily)) - 1][0], 0]
+
+        maxDeath = max(deaths[:, 1])  # Find highest number
+        tempDaily = np.where(deaths[:, 1] == maxDeath)  # Find location of highest number
+        whenDeath = deaths[tempDaily[int(len(tempDaily)) - 1][0], 0]
+
+        maxHospital = max(hospital[:, 1])  # Find highest number
+        tempDaily = np.where(hospital[:, 1] == maxHospital)  # Find location of highest number
+        whenHospital = hospital[tempDaily[int(len(tempDaily)) - 1][0], 0]
+
         maxDailyTotal = max(dailyTotals[:, 1])  # Find highest number
         tempDaily = np.where(dailyTotals[:, 1] == maxDailyTotal)  # Find location of highest number
         whenDailyTot = dailyTotals[tempDaily[int(len(tempDaily))-1][0], 0]
@@ -72,13 +85,15 @@ def createGraphs():
         maxDailyDeath = max(dailyDeaths[:, 1])  # Find highest number
         tempDaily = np.where(dailyDeaths[:, 1] == maxDailyDeath)  # Find location of highest number
         whenDailyDeath = dailyDeaths[tempDaily[int(len(tempDaily))-1][0], 0]
-        # print(maxDailyHospital, "op", whenDailyHos),
 
         # Plot data
         fig1 = plt.gcf()
         plt.plot(totals[:, 0], totals[:, 1], label='Total of sick people', color='tab:blue')
         plt.plot(hospital[:, 0], hospital[:, 1], label='People in hospitals', color='tab:green')
         plt.plot(deaths[:, 0], deaths[:, 1], label='People who died', color='tab:red')
+        plt.text(whenTot, maxTotal, maxTotal, color='tab:blue')
+        plt.text(whenHospital, maxHospital, maxHospital, color='tab:green')
+        plt.text(whenDeath, maxDeath, maxDeath, color='tab:red')
         plt.title('Cumulative corona numbers nation wide')
         plt.xticks(rotation=45)
         plt.legend()
