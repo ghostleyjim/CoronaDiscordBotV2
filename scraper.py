@@ -129,31 +129,31 @@ def returnmunicipality(municipality, days):
     days = int(days)
 
     for i in range(len(municipalities)):
-        if municipalities[ i ].name == municipality:
-            arrMunici.append([ municipalities[ i ].date, municipalities[ i ].name, municipalities[ i ].hospitalised ])
+        if municipalities[i].name == municipality:
+            arrMunici.append([municipalities[i].date, municipalities[i].name, municipalities[i].hospitalised])
 
-    arrSorted = sorted(arrMunici, key=lambda arrMunici: arrMunici[ 0 ], reverse=True)
+    arrSorted = sorted(arrMunici, key=lambda arrMunici: arrMunici[0], reverse=True)
 
     if days != 0:
         try:
-            difference = int(arrSorted[ 0 ][ 2 ]) - int(arrSorted[ days ][ 2 ])
+            difference = int(arrSorted[0][2]) - int(arrSorted[days][2])
             if difference > 0:
                 return (f"{municipality.capitalize()}, {days} days ago:\n"
-                        f"Today there have been {abs(difference)} more people hospitalized as on {arrSorted[ days ][ 0 ]} in {arrSorted[ days ][ 1 ].capitalize()}.\n"
-                        f"Today there has been {arrSorted[ 0 ][ 2 ]} people hospitalized.")
+                        f"Today there have been {abs(difference)} more people hospitalized as on {arrSorted[days][0]} in {arrSorted[days][1].capitalize()}.\n"
+                        f"Today there has been {arrSorted[0][2]} people hospitalized.")
             else:
                 return (f"{municipality.capitalize()}, {days} days ago:\n"
-                        f"Today there have been {abs(difference)} less people hospitalized as on {arrSorted[ days ][ 0 ]} in {arrSorted[ days ][ 1 ].capitalize()}.\n"
-                        f"Today there has been {arrSorted[ 0 ][ 2 ]} people hospitalized.")
+                        f"Today there have been {abs(difference)} less people hospitalized as on {arrSorted[days][0]} in {arrSorted[days][1].capitalize()}.\n"
+                        f"Today there has been {arrSorted[0][2]} people hospitalized.")
 
         except:
             if days == 1:
-                return (f"No data available from {days} day ago for {arrSorted[ 0 ][ 1 ]}.")
+                return (f"No data available from {days} day ago for {arrSorted[0][1]}.")
             else:
-                return (f"No data available from {days} days ago for {arrSorted[ 0 ][ 1 ]}.")
+                return (f"No data available from {days} days ago for {arrSorted[0][1]}.")
     else:
-        return (f"{municipality.capitalize()}, {arrSorted[ 0 ][ 0 ]}:\n"
-                f"There has been {arrSorted[ 0 ][ 2 ]} hospitalized in {arrSorted[ 0 ][ 1 ].capitalize()} on {arrSorted[ 0 ][ 0 ]}.")
+        return (f"{municipality.capitalize()}, {arrSorted[0][0]}:\n"
+                f"There has been {arrSorted[0][2]} hospitalized in {arrSorted[0][1].capitalize()} on {arrSorted[0][0]}.")
 
 # todo probleem als municipality niet bestaat maar wel een dagwaarde heeft array error
 # print(returnmunicipality("rOtTerdam","1"))

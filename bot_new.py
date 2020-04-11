@@ -55,8 +55,8 @@ async def on_message(message):  # if I reveive a message
             if split_msg[ 0 ] == "graph":
                 try:
                     graphs = plotNiceValues.createGraphs()
-                    graph1 = graphs[ 1 ]
-                    graph2 = graphs[ 2 ]
+                    graph1 = graphs[0]
+                    graph2 = graphs[1]
 
                     my_files = [ discord.File(graph1, 'graph1.png'), discord.File(graph2, 'graph2.png') ]
 
