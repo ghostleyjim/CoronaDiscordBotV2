@@ -21,7 +21,8 @@ class municipality:
         self.hospitalised = hospitalised
 
 class province:
-    def __init__(self, name, hospitalised):
+    def __init__(self, date, name, hospitalised):
+        self.date = date
         self.name = name
         self.hospitalised = hospitalised
 
@@ -87,6 +88,7 @@ def dataextract():
     global municipalities, provinces
 
     municipalities.clear()
+    provinces.clear()
 
     with open(mun_data, 'r') as csvfile:
         has_header = csv.Sniffer().has_header(csvfile.read(1024))   # Check if there is a header present
@@ -107,15 +109,15 @@ def dataextract():
 
             provinceExist = False
             for i in range(len(provinces)):
-                if provinces[i].name == row[3]:
+                if provinces[i].name == row[3].lower() and provinces[i].date == rowDate:
                     provinceExist = True
                     provinces[i].hospitalised += int(row[4])
 
             if provinceExist == False:
-                provinces.append(province(row[3], int(row[4])))
+                provinces.append(province(rowDate, row[3].lower(), int(row[4])))
 
 def returnmunicipality(municipality, days):
-    global municipalities
+    global municipalities, provinces
 
     dataextract()
 
@@ -128,9 +130,19 @@ def returnmunicipality(municipality, days):
     municipality = municipality.lower()
     days = int(days)
 
+    # fill temporary array when it's an municipality
     for i in range(len(municipalities)):
         if municipalities[i].name == municipality:
             arrMunici.append([municipalities[i].date, municipalities[i].name, municipalities[i].hospitalised])
+
+    # fill temporary array when it's an province
+    for i in range(len(provinces)):
+        if provinces[i].name == municipality:
+            arrMunici.append([provinces[i].date, provinces[i].name, provinces[i].hospitalised])
+
+    if len(arrMunici) == 0:
+        return (f"There is no municipality or province known called {municipality}\n"
+                f"For help type '!corona help'")
 
     arrSorted = sorted(arrMunici, key=lambda arrMunici: arrMunici[0], reverse=True)
 
