@@ -86,11 +86,19 @@ def createGraphs():
         tempDaily = np.where(dailyDeaths[:, 1] == maxDailyDeath)  # Find location of highest number
         whenDailyDeath = dailyDeaths[tempDaily[int(len(tempDaily))-1][0], 0]
 
+        #Find last values
+        totalNow = totals[int(len(totals)) - 1][1]
+        deathNow = deaths[int(len(deaths)) - 1][1]
+        hospitalNow = hospital[int(len(hospital)) - 1][1]
+        totalDailyNow = dailyTotals[int(len(dailyTotals)) - 1][1]
+        deathsDailyNow = dailyDeaths[int(len(dailyDeaths)) - 1][1]
+        hospitalDailyNow = dailyHospital[int(len(dailyHospital)) - 1][1]
+
         # Plot data
         fig1 = plt.gcf()
-        plt.plot(totals[:, 0], totals[:, 1], label='Total of sick people', color='tab:blue')
-        plt.plot(hospital[:, 0], hospital[:, 1], label='People in hospitals', color='tab:green')
-        plt.plot(deaths[:, 0], deaths[:, 1], label='People who died', color='tab:red')
+        plt.plot(totals[:, 0], totals[:, 1], label='Total of sick people (%.0f)' %totalNow, color='tab:blue')
+        plt.plot(hospital[:, 0], hospital[:, 1], label='People in hospitals (%.0f)' %hospitalNow, color='tab:green')
+        plt.plot(deaths[:, 0], deaths[:, 1], label='People who died (%.0f)' %deathNow, color='tab:red')
         plt.text(whenTot, maxTotal, maxTotal, color='tab:blue')
         plt.text(whenHospital, maxHospital, maxHospital, color='tab:green')
         plt.text(whenDeath, maxDeath, maxDeath, color='tab:red')
@@ -103,9 +111,9 @@ def createGraphs():
         plt.clf()
 
         fig2 = plt.gcf()
-        plt.plot(dailyTotals[:, 0], dailyTotals[:, 1], label='New amount of sick people', color='tab:blue')
-        plt.plot(dailyHospital[:, 0], dailyHospital[:, 1], label='New people in hospitals', color='tab:green')
-        plt.plot(dailyDeaths[:, 0], dailyDeaths[:, 1], label='New people who died', color='tab:red')
+        plt.plot(dailyTotals[:, 0], dailyTotals[:, 1], label='New amount of sick people (%.0f)' %totalDailyNow, color='tab:blue')
+        plt.plot(dailyHospital[:, 0], dailyHospital[:, 1], label='New people in hospitals (%.0f)' %hospitalDailyNow, color='tab:green')
+        plt.plot(dailyDeaths[:, 0], dailyDeaths[:, 1], label='New people who died (%.0f)' %deathsDailyNow, color='tab:red')
         plt.text(whenDailyTot, maxDailyTotal, maxDailyTotal, color='tab:blue')
         plt.text(whenDailyHos, maxDailyHospital, maxDailyHospital, color='tab:green')
         plt.text(whenDailyDeath, maxDailyDeath, maxDailyDeath, color='tab:red')
@@ -118,3 +126,5 @@ def createGraphs():
         plt.clf()
 
         return (fileName1, fileName2)
+
+createGraphs()
