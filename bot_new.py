@@ -75,7 +75,22 @@ async def on_message(message):  # if I reveive a message
                    f"'!corona graph' - graphs with national information fron the Netherlands\n"
                    f"'!corona help' - shows you this page again\n"
                    f"'!corona <municipality>' - information from the requested municipality\n"
-                   f"'!corona <municipality> <number>' - historical data from <number> days ago\n")
+                   f"'!corona <municipality> <number>' - historical data from <number> days ago\n"
+                   f"'!corona listProv' - gives a list with all Provinces\n"
+                   f"'!corona listMun' - gives a list with all municipalities")
+            await message.channel.send(msg)
+
+        elif split_msg[ 0 ].lower() == "listprov":
+            msg = (f"Sorry, my devs are working on this at the moment")
+            try:
+                msg = scraper.listProv()
+            except:
+                pass
+            await message.channel.send(msg)
+
+        elif split_msg[ 0 ].lower() == "listmun":
+            msg = (f"The list of all municipalities is too long to print here.\n"
+                   f"check https://www.cbs.nl/-/media/_excel/2020/03/gemeenten-alfabetisch-2020.xlsx for more information")
             await message.channel.send(msg)
 
         else:

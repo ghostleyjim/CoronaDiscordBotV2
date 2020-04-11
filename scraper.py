@@ -33,10 +33,9 @@ with open('directories.txt', 'r') as directorylist:
     for lines in read:
         directories.append(lines.strip('\n'))
 
-mun_data = directories[0]
-NL_data = directories[1]
-nice_data = directories[2]
-
+    mun_data = directories[0]
+    NL_data = directories[1]
+    nice_data = directories[2]
 
 #
 #todo dit afmaken!
@@ -167,5 +166,23 @@ def returnmunicipality(municipality, days):
         return (f"{municipality.capitalize()}, {arrSorted[0][0]}:\n"
                 f"There has been {arrSorted[0][2]} hospitalized in {arrSorted[0][1].capitalize()} on {arrSorted[0][0]}.")
 
+def listProv():
+    global provinces
+
+    dataextract()
+    tempArray = []
+    tempArray.clear()
+    msg = ""
+
+    for i in range(len(provinces)):
+        if not provinces[i].name in tempArray:
+            tempArray.append(provinces[i].name)
+
+    tempArray = sorted(tempArray, key=lambda tempArray: tempArray[0], reverse=False)
+
+    for i in range(len(tempArray)):
+        msg += f"{str(tempArray[i]).capitalize()}\n"
+
+    return(msg)
+
 # todo probleem als municipality niet bestaat maar wel een dagwaarde heeft array error
-# print(returnmunicipality("rOtTerdam","1"))
