@@ -5,6 +5,11 @@ import datetime
 import numpy as np
 
 def createGraphs():
+    with open('directories.txt', 'r') as directorylist:
+        directories = [ ]
+        read = (line for line in directorylist)
+        for lines in read:
+            directories.append(lines.strip('\n'))
 
     # Create arrays
     totals = np.array([[None,None]])
@@ -15,7 +20,7 @@ def createGraphs():
     dailyDeaths = np.array([[None,None]])
 
     # Open .csv file
-    with open('data/rivm_NL_covid19_national.csv', 'r') as csvfile:
+    with open(directories[1], 'r') as csvfile:
         has_header = csv.Sniffer().has_header(csvfile.read(1024))  # Check if there is a header present
         csvfile.seek(0)
         plots = csv.reader(csvfile, delimiter=',')
