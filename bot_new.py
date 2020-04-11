@@ -71,7 +71,7 @@ async def on_ready():  # if script connects to Discord
 
 @client.event
 async def on_message(message):  # if I reveive a message
-    incomming = message.content
+    incomming = message.content.lower()
 
     if incomming.startswith("<"):
         split_msg = incomming.split(' ')
