@@ -4,9 +4,14 @@ import discord
 from dotenv import load_dotenv
 import os
 # import Corona
-import scraper, plotNiceValues, timedevents
+import scraper, plotNiceValues, timedevents, config
 
 trigger = '!corona'
+
+config._init()
+scraper.database_scrape()
+timedevents.timer()
+plotNiceValues.municipalitygraph("dordrecht")
 
 load_dotenv()  # load the secret from the ..env file
 TOKEN = os.getenv('DISCORD_TOKEN')  # variable token stores the secret
@@ -45,7 +50,7 @@ def inputparser(split_msg):
 
     else:
         for x in range(msglength):
-            if split_msg[ x ].startswith("-"):
+            if (split_msg[ x ].startswith("-") or split_msg[ x ].startswith("+")):
                 if split_msg[ x ][ 1: ].isdigit():
                     request_value = split_msg[ x ][ 1: ]
             elif split_msg[ x ].isdigit():
@@ -114,9 +119,5 @@ async def on_message(message):  # if I reveive a message
         else:
             send_ready = inputparser(split_msg)
             await message.channel.send(send_ready)
-
-
-scraper.database_scrape()
-timedevents.timer()
 
 client.run(TOKEN)  # run the client and login with secret

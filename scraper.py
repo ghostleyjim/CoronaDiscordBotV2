@@ -4,27 +4,13 @@ import wget
 import os
 import datetime
 import timedevents
-
-municipalities = []
-provinces = []
+import config
 
 remove_list = {}
 clock = datetime.datetime.today().day
 last_update = 0
 
-class municipality:
-    def __init__(self, date, name, code, province, hospitalised):
-        self.date = date
-        self.name = name
-        self.code = code
-        self.province = province
-        self.hospitalised = hospitalised
 
-class province:
-    def __init__(self, date, name, hospitalised):
-        self.date = date
-        self.name = name
-        self.hospitalised = hospitalised
 
 #database file directories
 with open('directories.txt', 'r') as directorylist:
@@ -81,73 +67,69 @@ def database_scrape():
                 save_file += directory[ x ]
         print(save_file, file=directorylist, end='')
 
+        dataextract()
         timedevents.timer()
 
-def dataextract():
-    global municipalities, provinces
 
-    municipalities.clear()
-    provinces.clear()
+def dataextract():
+    config.municipalities.clear()
+    config.provinces.clear()
 
     with open(mun_data, 'r') as csvfile:
-        has_header = csv.Sniffer().has_header(csvfile.read(1024))   # Check if there is a header present
-        csvfile.seek(0)                                             # Go back to line 0 in CSV file
-        readCSV = csv.reader(csvfile, delimiter=',')                # Read .CSV file
+        has_header = csv.Sniffer().has_header(csvfile.read(1024))  # Check if there is a header present
+        csvfile.seek(0)  # Go back to line 0 in CSV file
+        readCSV = csv.reader(csvfile, delimiter=',')  # Read .CSV file
 
         if has_header:
             next(readCSV)
 
         for row in readCSV:
-            readDate = row[0].split("-")
-            rowYear = int(readDate[0])
-            rowMonth = int(readDate[1])
-            rowDay = int(readDate[2])
+            readDate = row[ 0 ].split("-")
+            rowYear = int(readDate[ 0 ])
+            rowMonth = int(readDate[ 1 ])
+            rowDay = int(readDate[ 2 ])
             rowDate = datetime.date(rowYear, rowMonth, rowDay)
 
-            municipalities.append(municipality(rowDate, row[1].lower(),row[2],row[3].lower(),row[4]))
+            config.municipalities.append(config.municipality(rowDate, row[ 1 ].lower(), row[ 2 ], row[ 3 ].lower(), row[ 4 ]))
 
             provinceExist = False
-            for i in range(len(provinces)):
-                if provinces[i].name == row[3].lower() and provinces[i].date == rowDate:
+            for i in range(len(config.provinces)):
+                if config.provinces[ i ].name == row[ 3 ].lower() and config.provinces[ i ].date == rowDate:
                     provinceExist = True
-                    provinces[i].hospitalised += int(row[4])
+                    config.provinces[ i ].hospitalised += int(row[ 4 ])
 
             if provinceExist == False:
-                provinces.append(province(rowDate, row[3].lower(), int(row[4])))
+                config.provinces.append(config.province(rowDate, row[ 3 ].lower(), int(row[ 4 ])))
+
 
 def returnmunicipality(municipality, days):
-    global municipalities, provinces
-
-    dataextract()
-
-    arrMunici = []
-    arrSorted = []
+    arrMunici = [ ]
+    arrSorted = [ ]
 
     arrMunici.clear()
     arrSorted.clear()
 
-    municipality = municipality.lower()
     days = int(days)
 
     # fill temporary array when it's an municipality
-    for i in range(len(municipalities)):
-        if municipalities[i].name == municipality:
-            arrMunici.append([municipalities[i].date, municipalities[i].name, municipalities[i].hospitalised])
+    for i in range(len(config.municipalities)):
+        if config.municipalities[ i ].name == municipality:
+            arrMunici.append([ config.municipalities[ i ].date, config.municipalities[ i ].name, config.municipalities[ i ].hospitalised ])
 
     # fill temporary array when it's an province
-    for i in range(len(provinces)):
-        if provinces[i].name == municipality:
-            arrMunici.append([provinces[i].date, provinces[i].name, provinces[i].hospitalised])
+    for i in range(len(config.provinces)):
+        if config.provinces[ i ].name == municipality:
+            arrMunici.append([ config.provinces[ i ].date, config.provinces[ i ].name, config.provinces[ i ].hospitalised ])
 
     if len(arrMunici) == 0:
         return (f"There is no municipality or province known called {municipality}\n"
                 f"For help type '!corona help'")
 
-    arrSorted = sorted(arrMunici, key=lambda arrMunici: arrMunici[0], reverse=True)
+    arrSorted = sorted(arrMunici, key=lambda arrMunici: arrMunici[ 0 ], reverse=True)
 
     if days != 0:
         try:
-            difference = int(arrSorted[0][2]) - int(arrSorted[days][2])
+            difference = int(arrSorted[ 0 ][ 2 ]) - int(arrSorted[ days ][ 2 ])
             if difference > 0:
                 return (f"{municipality.capitalize()}, {days} days ago:\n"
                         f"Today there have been {abs(difference)} more people hospitalized as on {arrSorted[days][0]} in {arrSorted[days][1].capitalize()}.\n"

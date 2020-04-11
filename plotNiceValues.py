@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import csv
 import datetime
 import numpy as np
+import config
 
 def createGraphs():
     #Get name of .csv file from database
@@ -133,4 +134,17 @@ def createGraphs():
 
         return (fileName1, fileName2)
 
-createGraphs()
+
+def municipalitygraph(municipality):
+    arrMunici = [ ]
+    arrSorted = [ ]
+
+    arrMunici.clear()
+    arrSorted.clear()
+
+    for i in range(len(config.municipalities)):
+        if config.municipalities[ i ].name == municipality:
+            arrMunici.append([ config.municipalities[ i ].date, config.municipalities[ i ].name, config.municipalities[ i ].hospitalised ])
+    print(arrMunici)
+
+# createGraphs()
