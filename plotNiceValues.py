@@ -5,6 +5,7 @@ import datetime
 import numpy as np
 
 def createGraphs():
+    #Get name of .csv file from database
     with open('directories.txt', 'r') as directorylist:
         directories = [ ]
         read = (line for line in directorylist)
