@@ -100,4 +100,6 @@ def createGraphs():
         fileName2 = "./graphs/NumbersDaily.png"
         fig2.savefig(fileName2, dpi=100, bbox_inches='tight')
 
+        plt.clf()
+
         return (fileName1, fileName2)

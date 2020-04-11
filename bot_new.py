@@ -49,33 +49,19 @@ async def on_message(message):  # if I reveive a message
     incomming = message.content
 
     if incomming.startswith("<"):
-        split_msg = incomming.split(' ')
-        if split_msg[ 1 ] == trigger:
-            del (split_msg[ 0:2 ])
-            if split_msg[ 0 ] == "graph":
-                try:
-                    graphs = plotNiceValues.createGraphs()
-                    graph1 = graphs[0]
-                    graph2 = graphs[1]
-
-                    my_files = [ discord.File(graph1, 'graph1.png'), discord.File(graph2, 'graph2.png') ]
-
-                    await message.channel.send('Graphs created: ', files=my_files)
-                except:
-                    errormsg = "Error in creating graphs"
-                    await message.channel.send(errormsg)
-            else:
-                send_ready = inputparser(split_msg)
-                await message.channel.send(send_ready)
+        errormsg = "Doe lekker normaal en voer gewoon een gemeente in..."
+        await message.channel.send(errormsg)
 
     elif incomming.startswith(trigger):
         split_msg = incomming.split(' ')
         del (split_msg[ 0 ])
-        if split_msg[ 0 ] == "graph":
+        if len(split_msg) == 0:
+            split_msg.append("help")
+        if split_msg[ 0 ].lower() == "graph":
             try:
                 graphs = plotNiceValues.createGraphs()
-                graph1 = graphs[ 1 ]
-                graph2 = graphs[ 2 ]
+                graph1 = graphs[0]
+                graph2 = graphs[1]
 
                 my_files = [ discord.File(graph1, 'graph1.png'), discord.File(graph2, 'graph2.png') ]
 
@@ -83,6 +69,14 @@ async def on_message(message):  # if I reveive a message
             except:
                 errormsg = "Error in creating graphs"
                 await message.channel.send(errormsg)
+
+        elif split_msg[ 0 ].lower() == "help":
+            msg = (f"Hello, I'm your personal Covid-19 assistent, here is what I can do for you\n"
+                   f"'!corona graph' - graphs with national information fron the Netherlands\n"
+                   f"'!corona help' - shows you this page again\n"
+                   f"'!corona <municipality>' - information from the requested municipality\n"
+                   f"'!corona <municipality> <number>' - historical data from <number> days ago\n")
+            await message.channel.send(msg)
 
         else:
             send_ready = inputparser(split_msg)
