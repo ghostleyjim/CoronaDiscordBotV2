@@ -23,5 +23,3 @@ class province:
         self.date = date
         self.name = name
         self.hospitalised = hospitalised
-
-_init()

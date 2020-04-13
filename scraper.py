@@ -3,16 +3,15 @@ import csv
 import wget
 import os
 import datetime
-import timedevents
 import config
+import requests
+from bs4 import BeautifulSoup
 
 remove_list = {}
 clock = datetime.datetime.today().day
 last_update = 0
 
-
-
-#database file directories
+# database file directories
 with open('directories.txt', 'r') as directorylist:
     directories = [ ]
     read = (line for line in directorylist)
@@ -22,15 +21,6 @@ with open('directories.txt', 'r') as directorylist:
     mun_data = directories[0]
     NL_data = directories[1]
     nice_data = directories[2]
-
-#
-#todo dit afmaken!
-# def timecheck():
-#     print(last_update)
-#     clock = datetime.datetime.today().day
-#     if last_update != clock:
-#         database_scrape()
-#     Timer(14400, timecheck).start()
 
 def database_scrape():
     # open file with the file locations and add them to a list
@@ -47,15 +37,28 @@ def database_scrape():
     except:
         pass
 
-    #list for raw repositories add , + <url> when new repo's used
-    page = [ 'https://raw.githubusercontent.com/J535D165/CoronaWatchNL/master/data/rivm_NL_covid19_hosp_municipality.csv',
-             'https://raw.githubusercontent.com/J535D165/CoronaWatchNL/master/data/rivm_NL_covid19_national.csv',
-             'https://raw.githubusercontent.com/J535D165/CoronaWatchNL/master/data/nice_ic_by_day.csv']
+    # list for raw repositories add , + <url> when new repo's used
+    page = [ 'https://raw.githubusercontent.com/J535D165/CoronaWatchNL/master/data/rivm_NL_covid19_hosp_municipality.csv', 'https://raw.githubusercontent.com/J535D165/CoronaWatchNL/master/data/rivm_NL_covid19_national.csv',
+             'https://raw.githubusercontent.com/J535D165/CoronaWatchNL/master/data/nice_ic_by_day.csv' ]
+
+    rivm_db = requests.get('https://www.rivm.nl/coronavirus-kaart-van-nederland-per-gemeente')
+
+    soup = BeautifulSoup(rivm_db.content, 'html.parser')
+
+    results = soup.find(id="csvData")
+
+    RIVM = results.get_text()
+
+    RIVM = RIVM.lower()
+
+    with open("data/RIVM.csv", 'w') as db:
+        print(RIVM[ 1: ], file=db, end='')
 
     # download new files
     directory = [ ]
     for x in range(len(page)):
         directory.append(wget.download(page[ x ], out='./data'))
+        directory.append("./data/RIVM.csv")
 
     with open('directories.txt', 'w') as directorylist:
         save_file = ''
@@ -68,20 +71,23 @@ def database_scrape():
         print(save_file, file=directorylist, end='')
 
         dataextract()
-        timedevents.timer()
 
 
 def dataextract():
     config.municipalities.clear()
     config.provinces.clear()
 
-    with open(mun_data, 'r') as csvfile:
+    with open(mun_data, 'r') as csvfile, open('data\RIVM.csv', 'r') as rivmdb:
         has_header = csv.Sniffer().has_header(csvfile.read(1024))  # Check if there is a header present
         csvfile.seek(0)  # Go back to line 0 in CSV file
         readCSV = csv.reader(csvfile, delimiter=',')  # Read .CSV file
-
+        also_has_header = csv.Sniffer().has_header(rivmdb.read(1024))
+        rivmdb.seek(0)
+        readRIVM = csv.reader(rivmdb, delimiter=';')
         if has_header:
             next(readCSV)
+        if also_has_header:
+            next(readRIVM)
 
         for row in readCSV:
             readDate = row[ 0 ].split("-")
@@ -89,6 +95,11 @@ def dataextract():
             rowMonth = int(readDate[ 1 ])
             rowDay = int(readDate[ 2 ])
             rowDate = datetime.date(rowYear, rowMonth, rowDay)
+
+            # gemeentenaam = row[1].lower()
+            # gemeentecode = row[2]
+            # provincienaam = row[3].lower()
+            # aantal = row[4]
 
             config.municipalities.append(config.municipality(rowDate, row[ 1 ].lower(), row[ 2 ], row[ 3 ].lower(), row[ 4 ]))
 

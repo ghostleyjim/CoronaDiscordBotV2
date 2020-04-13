@@ -4,14 +4,13 @@ import discord
 from dotenv import load_dotenv
 import os
 import datetime
-# import Corona
-import scraper, plotNiceValues, timedevents, config
+import scraper, plotNiceValues, config
 
 trigger = '!corona'
 
 config._init()
 scraper.database_scrape()
-timedevents.timer()
+
 
 load_dotenv()  # load the secret from the ..env file
 TOKEN = os.getenv('DISCORD_TOKEN')  # variable token stores the secret
@@ -116,7 +115,14 @@ async def on_message(message):  # if I reveive a message
             if len(split_msg) == 0:
                 split_msg.append("help")
             send_ready = inputparser(split_msg)
-            await message.channel.send(send_ready)
+            if type(send_ready) == tuple:
+                send_ready = [ discord.File(x, f'{x}graph.png') for x in send_ready ]
+                await message.channel.send(files=send_ready)
+            elif send_ready.startswith('./'):
+                file = discord.File(send_ready, 'municgraph.png')
+                await message.channel.send(file=file)
+            else:
+                await message.channel.send(send_ready)
 
     elif incomming.startswith(trigger):
         split_msg = incomming.split(' ')
