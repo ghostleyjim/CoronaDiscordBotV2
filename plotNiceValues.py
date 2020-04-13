@@ -136,15 +136,27 @@ def createGraphs():
 
 
 def municipalitygraph(municipality):
-    arrMunici = [ ]
-    arrSorted = [ ]
+    arrMunici = [ ]  # store objects in array from requested municipality
 
     arrMunici.clear()
-    arrSorted.clear()
 
-    for i in range(len(config.municipalities)):
-        if config.municipalities[ i ].name == municipality:
-            arrMunici.append([ config.municipalities[ i ].date, config.municipalities[ i ].name, config.municipalities[ i ].hospitalised ])
-    print(arrMunici)
+    arrMunici = [ x for x in config.municipalities if x.name == municipality ]
+    amount = [ int(x.hospitalised) for x in arrMunici ]
+    dates = [ x.date for x in arrMunici ]
+    ydates = [ x.strftime('%d-%m') for x in dates ]
+    mungraph = plt.gcf()
+    ax = mungraph.add_subplot()
+    plt.plot_date(range(len(ydates)), amount, xdate=True, marker='x', label=f'People hospitalized in {municipality}', color='tab:blue', ls='solid')
+    plt.title(f'Daily hospitalized corona numbers for {municipality}', pad=13.0)
+    plt.xticks(range(len(ydates)), ydates, rotation=45)
+    plt.legend()
+    for i, v in enumerate(amount):
+        ax.text(i, v, v, ha="center")
+    fileName = "./graphs/MunicDaily.png"
+    mungraph.savefig(fileName, dpi=100, bbox_inches='tight')
+
+    plt.clf()
+
+    return (fileName)
 
 # createGraphs()

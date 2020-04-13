@@ -11,7 +11,6 @@ trigger = '!corona'
 config._init()
 scraper.database_scrape()
 timedevents.timer()
-plotNiceValues.municipalitygraph("dordrecht")
 
 load_dotenv()  # load the secret from the ..env file
 TOKEN = os.getenv('DISCORD_TOKEN')  # variable token stores the secret
@@ -26,14 +25,39 @@ def inputparser(split_msg):
     municipality_value = [ ]
 
     if split_msg[ 0 ] == 'help':
-        helpmsg = (f"Hello, I'm your personal Covid-19 assistent, here is what I can do for you\n"
-                   f"'!corona graph' - graphs with national information from the Netherlands\n"
-                   f"'!corona help' - shows you this page again\n"
-                   f"'!corona <municipality>' - information from the requested municipality\n"
-                   f"'!corona <municipality> <number>' - historical data from <number> days ago\n"
-                   f"'!corona listProv' - gives a list with all Provinces\n"
-                   f"'!corona listMun' - gives a list with all municipalities")
+        helpmsg = ("Hello, I'm your personal Covid-19 assistent, here is what I can do for you\n"
+                   "'!corona graph' - graphs with national information from the Netherlands\n"
+                   "'!corona graph <municipality>' - graph with municipality hospitalized patients information from the Netherlands\n"
+                   "'!corona help' - shows you this page again\n"
+                   "'!corona <municipality>' - information from the requested municipality\n"
+                   "'!corona <municipality> <number>' - historical data from <number> days ago\n"
+                   "'!corona listProv' - gives a list with all Provinces\n"
+                   "'!corona listMun' - gives a list with all municipalities")
         return helpmsg
+
+    elif split_msg[ 0 ] == "graph":
+        try:
+            if len(split_msg) == 1:
+                graphs = plotNiceValues.createGraphs()
+
+            else:
+                munic_request = ' '.join(split_msg[ 1: ])
+
+                for x in config.municipalities:
+                    if x.name == munic_request:
+                        graphs = plotNiceValues.municipalitygraph(munic_request)
+                        return graphs
+                else:
+                    errormsg = 'municipality not found \n check https://www.cbs.nl/-/media/_excel/2020/03/gemeenten-alfabetisch-2020.xlsx for more information'
+                    return errormsg
+
+            return graphs
+
+        except:
+            errormsg = 'not able to create graphs!'
+            return errormsg
+
+
 
     elif split_msg[ 0 ] == "listmun":
         listmunmsg = (f"The list of all municipalities is too long to print here.\n"
@@ -65,8 +89,9 @@ def inputparser(split_msg):
             send_ready = scraper.returnmunicipality(location, request_value)
             return send_ready
         else:
-            send_ready = "Error, municipality is unknown"
-            return send_ready
+            split_msg = 'help'
+            helpmessage = inputparser(split_msg)
+            return (helpmessage)
 
 
 @client.event
@@ -82,42 +107,24 @@ async def on_message(message):  # if I reveive a message
         split_msg = incomming.split(' ')
         if split_msg[ 1 ] == trigger:
             del (split_msg[ 0:2 ])
-            if split_msg[ 0 ] == "graph":
-                try:
-                    graphs = plotNiceValues.createGraphs()
-                    graph1 = graphs[ 1 ]
-                    graph2 = graphs[ 2 ]
-
-                    my_files = [ discord.File(graph1, 'graph1.png'), discord.File(graph2, 'graph2.png') ]
-
-                    await message.channel.send('Graphs created by Diver', files=my_files)
-                except:
-                    errormsg = "Error in creating graphs"
-                    await message.channel.send(errormsg)
-            else:
-                send_ready = inputparser(split_msg)
-                await message.channel.send(send_ready)
+            if len(split_msg) == 0:
+                split_msg.append("help")
+            send_ready = inputparser(split_msg)
+            await message.channel.send(send_ready)
 
     elif incomming.startswith(trigger):
         split_msg = incomming.split(' ')
         del (split_msg[ 0 ])
         if len(split_msg) == 0:
             split_msg.append("help")
-        if split_msg[ 0 ].lower() == "graph":
-            try:
-                graphs = plotNiceValues.createGraphs()
-                graph1 = graphs[0]
-                graph2 = graphs[1]
-
-                my_files = [ discord.File(graph1, 'graph1.png'), discord.File(graph2, 'graph2.png') ]
-
-                await message.channel.send('Graphs created by Diver', files=my_files)
-            except:
-                errormsg = "Error in creating graphs"
-                await message.channel.send(errormsg)
-
+        send_ready = inputparser(split_msg)
+        if type(send_ready) == tuple:
+            send_ready = [ discord.File(x, f'{x}graph.png') for x in send_ready ]
+            await message.channel.send(files=send_ready)
+        elif send_ready.startswith('./'):
+            file = discord.File(send_ready, 'municgraph.png')
+            await message.channel.send(file=file)
         else:
-            send_ready = inputparser(split_msg)
             await message.channel.send(send_ready)
 
 client.run(TOKEN)  # run the client and login with secret
