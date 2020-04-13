@@ -6,4 +6,5 @@
 /testcsv.csv
 /TempTesting.py
 /Backup/
-/data/
+./data
+/test_file.py
