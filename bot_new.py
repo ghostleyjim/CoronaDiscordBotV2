@@ -3,6 +3,7 @@
 import discord
 from dotenv import load_dotenv
 import os
+import datetime
 # import Corona
 import scraper, plotNiceValues, timedevents, config
 
@@ -102,6 +103,11 @@ async def on_ready():  # if script connects to Discord
 @client.event
 async def on_message(message):  # if I reveive a message
     incomming = message.content.lower()
+
+    # update data once a day after 16:00
+    if config.dateLastUpdate != datetime.date.today() and int(datetime.datetime.now().hour) >= 16:
+        scraper.database_scrape()
+        config.dateLastUpdate = datetime.date.today()
 
     if incomming.startswith("<"):
         split_msg = incomming.split(' ')
