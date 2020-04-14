@@ -18,17 +18,18 @@ with open('directories.txt', 'r') as directorylist:
     for lines in read:
         directories.append(lines.strip('\n'))
 
-    mun_data = directories[0]
-    NL_data = directories[1]
-    nice_data = directories[2]
+    mun_data = directories[ 0 ]
+    NL_data = directories[ 1 ]
+    nice_data = directories[ 2 ]
+
 
 def database_scrape():
     # open file with the file locations and add them to a list
     with open('directories.txt', 'r') as directorylist:
-        directories = [ ]
+        dirs = [ ]
         read = (line for line in directorylist)
         for lines in read:
-            directories.append(lines.strip('\n'))
+            dirs.append(lines.strip('\n'))
 
     # remove old files from list (if available)
     try:
@@ -41,24 +42,42 @@ def database_scrape():
     page = [ 'https://raw.githubusercontent.com/J535D165/CoronaWatchNL/master/data/rivm_NL_covid19_hosp_municipality.csv', 'https://raw.githubusercontent.com/J535D165/CoronaWatchNL/master/data/rivm_NL_covid19_national.csv',
              'https://raw.githubusercontent.com/J535D165/CoronaWatchNL/master/data/nice_ic_by_day.csv' ]
 
-    rivm_db = requests.get('https://www.rivm.nl/coronavirus-kaart-van-nederland-per-gemeente')
+    # RIVM website scraping
+    # read file and check if date is already included today if not download and upload the file
+    with open('data/RIVM.csv', 'r') as db:
+        update_date = datetime.datetime.today().strftime('%d-%m-%y;')
+        check_date = datetime.datetime.today().strftime('%d-%m-%y')
+        firstline = db.readlines()
+        firstline = [ x.rstrip('\n') for x in firstline ]
+        firstline = [ x.split(';', 1)[ 0 ] for x in firstline ]
+        # RIVM only updates their database at 1400 so check if data is already in list and only update after 1400
+        check = (True if (check_date not in firstline) and int(datetime.datetime.now().hour) >= 14 else False)
 
-    soup = BeautifulSoup(rivm_db.content, 'html.parser')
+    if check:
+        rivm_db = requests.get('https://www.rivm.nl/coronavirus-kaart-van-nederland-per-gemeente')
 
-    results = soup.find(id="csvData")
+        soup = BeautifulSoup(rivm_db.content, 'html.parser')
 
-    RIVM = results.get_text()
+        results = soup.find(id="csvData")
 
-    RIVM = RIVM.lower()
+        RIVM = results.get_text().rstrip('\n')
 
-    with open("data/RIVM.csv", 'w') as db:
-        print(RIVM[ 1: ], file=db, end='')
+        RIVM = RIVM.lower().split('\n')
 
-    # download new files
+        # delete header and blank newline before appending
+        del (RIVM[ 0:2 ])
+
+        # Append data to csv file include date time stamp (string)
+        with open("data/RIVM.csv", 'a') as db:
+            inputdata = [ update_date + x for x in RIVM ]
+            inputdata = '\n'.join(inputdata)
+            db.write('\n')
+            print(inputdata, file=db, end='')
+
+    # download new files and add file directory to directory.txt (for deleting)
     directory = [ ]
     for x in range(len(page)):
         directory.append(wget.download(page[ x ], out='./data'))
-        directory.append("./data/RIVM.csv")
 
     with open('directories.txt', 'w') as directorylist:
         save_file = ''
@@ -70,14 +89,14 @@ def database_scrape():
                 save_file += directory[ x ]
         print(save_file, file=directorylist, end='')
 
-        dataextract()
+    dataextract()
 
 
 def dataextract():
     config.municipalities.clear()
     config.provinces.clear()
 
-    with open(mun_data, 'r') as csvfile, open('data\RIVM.csv', 'r') as rivmdb:
+    with open(mun_data, 'r') as csvfile, open(mun_data, 'r') as rivmdb:
         has_header = csv.Sniffer().has_header(csvfile.read(1024))  # Check if there is a header present
         csvfile.seek(0)  # Go back to line 0 in CSV file
         readCSV = csv.reader(csvfile, delimiter=',')  # Read .CSV file
@@ -143,39 +162,40 @@ def returnmunicipality(municipality, days):
             difference = int(arrSorted[ 0 ][ 2 ]) - int(arrSorted[ days ][ 2 ])
             if difference > 0:
                 return (f"{municipality.capitalize()}, {days} days ago:\n"
-                        f"Today there have been {abs(difference)} more people hospitalized as on {arrSorted[days][0]} in {arrSorted[days][1].capitalize()}.\n"
-                        f"Today there has been {arrSorted[0][2]} people hospitalized.")
+                        f"Today there have been {abs(difference)} more people hospitalized as on {arrSorted[ days ][ 0 ]} in {arrSorted[ days ][ 1 ].capitalize()}.\n"
+                        f"Today there has been {arrSorted[ 0 ][ 2 ]} people hospitalized.")
             else:
                 return (f"{municipality.capitalize()}, {days} days ago:\n"
-                        f"Today there have been {abs(difference)} less people hospitalized as on {arrSorted[days][0]} in {arrSorted[days][1].capitalize()}.\n"
-                        f"Today there has been {arrSorted[0][2]} people hospitalized.")
+                        f"Today there have been {abs(difference)} less people hospitalized as on {arrSorted[ days ][ 0 ]} in {arrSorted[ days ][ 1 ].capitalize()}.\n"
+                        f"Today there has been {arrSorted[ 0 ][ 2 ]} people hospitalized.")
 
         except:
             if days == 1:
-                return (f"No data available from {days} day ago for {arrSorted[0][1]}.")
+                return (f"No data available from {days} day ago for {arrSorted[ 0 ][ 1 ]}.")
             else:
-                return (f"No data available from {days} days ago for {arrSorted[0][1]}.")
+                return (f"No data available from {days} days ago for {arrSorted[ 0 ][ 1 ]}.")
     else:
-        return (f"{municipality.capitalize()}, {arrSorted[0][0]}:\n"
-                f"There has been {arrSorted[0][2]} hospitalized in {arrSorted[0][1].capitalize()} on {arrSorted[0][0]}.")
+        return (f"{municipality.capitalize()}, {arrSorted[ 0 ][ 0 ]}:\n"
+                f"There has been {arrSorted[ 0 ][ 2 ]} hospitalized in {arrSorted[ 0 ][ 1 ].capitalize()} on {arrSorted[ 0 ][ 0 ]}.")
+
 
 def listProv():
     global provinces
 
     dataextract()
-    tempArray = []
+    tempArray = [ ]
     tempArray.clear()
     msg = ""
 
     for i in range(len(provinces)):
-        if not provinces[i].name in tempArray:
-            tempArray.append(provinces[i].name)
+        if not provinces[ i ].name in tempArray:
+            tempArray.append(provinces[ i ].name)
 
-    tempArray = sorted(tempArray, key=lambda tempArray: tempArray[0], reverse=False)
+    tempArray = sorted(tempArray, key=lambda tempArray: tempArray[ 0 ], reverse=False)
 
     for i in range(len(tempArray)):
-        msg += f"{str(tempArray[i]).capitalize()}\n"
+        msg += f"{str(tempArray[ i ]).capitalize()}\n"
 
-    return(msg)
+    return (msg)
 
 # todo probleem als municipality niet bestaat maar wel een dagwaarde heeft array error

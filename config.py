@@ -10,12 +10,14 @@ def _init():
     dateLastUpdate = datetime.date.today() - datetime.timedelta(days=1)
 
 class municipality:
-    def __init__(self, date, name, code, province, hospitalised):
+    def __init__(self, date, name, code, province, hospitalised, bevolkingsaantal=0, besmettingen=0):
         self.date = date
         self.name = name
         self.code = code
         self.province = province
         self.hospitalised = hospitalised
+        self.besmettingen = besmettingen
+        self.bevolkingsaantal = bevolkingsaantal
 
 
 class province:
