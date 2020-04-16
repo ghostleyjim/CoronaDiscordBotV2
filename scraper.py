@@ -45,8 +45,8 @@ def database_scrape():
     # RIVM website scraping
     # read file and check if date is already included today if not download and upload the file
     with open('data/RIVM.csv', 'r') as db:
-        update_date = datetime.datetime.today().strftime('%Y-%m-%d;')
-        check_date = datetime.datetime.today().strftime('%Y-%m-%d')
+        update_date = datetime.datetime.today().strftime('%d-%m-%Y,')
+        check_date = datetime.datetime.today().strftime('%d-%m-%Y')
         firstline = db.readlines()
         firstline = [ x.rstrip('\n') for x in firstline ]
         firstline = [ x.split(',', 1)[ 0 ] for x in firstline ]
@@ -96,23 +96,18 @@ def dataextract():
     config.municipalities.clear()
     config.provinces.clear()
 
-    with open(mun_data, 'r') as csvfile, open(mun_data, 'r') as rivmdb:
+    with open('data/RIVM.csv', 'r') as csvfile:
         has_header = csv.Sniffer().has_header(csvfile.read(1024))  # Check if there is a header present
         csvfile.seek(0)  # Go back to line 0 in CSV file
         readCSV = csv.reader(csvfile, delimiter=',')  # Read .CSV file
-        also_has_header = csv.Sniffer().has_header(rivmdb.read(1024))
-        rivmdb.seek(0)
-        readRIVM = csv.reader(rivmdb, delimiter=';')
         if has_header:
             next(readCSV)
-        if also_has_header:
-            next(readRIVM)
 
         for row in readCSV:
             readDate = row[ 0 ].split("-")
-            rowYear = int(readDate[ 0 ])
+            rowYear = int(readDate[ 2 ])
             rowMonth = int(readDate[ 1 ])
-            rowDay = int(readDate[ 2 ])
+            rowDay = int(readDate[ 0 ])
             rowDate = datetime.date(rowYear, rowMonth, rowDay)
 
             # gemeentenaam = row[1].lower()
@@ -120,7 +115,7 @@ def dataextract():
             # provincienaam = row[3].lower()
             # aantal = row[4]
 
-            config.municipalities.append(config.municipality(rowDate, row[ 1 ].lower(), row[ 2 ], row[ 3 ].lower(), row[ 4 ]))
+            config.municipalities.append(config.municipality(rowDate, row[ 2 ].lower(), row[ 1 ], row[ 10 ].lower(), row[ 4 ], row[ 6 ], row[ 3 ]))
 
             provinceExist = False
             for i in range(len(config.provinces)):
@@ -129,7 +124,7 @@ def dataextract():
                     config.provinces[ i ].hospitalised += int(row[ 4 ])
 
             if provinceExist == False:
-                config.provinces.append(config.province(rowDate, row[ 3 ].lower(), int(row[ 4 ])))
+                config.provinces.append(config.province(rowDate, row[ 10 ].lower(), int(row[ 5 ])))
 
 
 def returnmunicipality(municipality, days):
@@ -156,6 +151,7 @@ def returnmunicipality(municipality, days):
                 f"For help type '!corona help'")
 
     arrSorted = sorted(arrMunici, key=lambda arrMunici: arrMunici[ 0 ], reverse=True)
+    reported = [ x for x in config.municipalities if x.name == municipality ]
 
     if days != 0:
         try:
@@ -163,7 +159,7 @@ def returnmunicipality(municipality, days):
             if difference > 0:
                 return (f"{municipality.capitalize()}, {days} days ago:\n"
                         f"Today there have been {abs(difference)} more people hospitalized as on {arrSorted[ days ][ 0 ]} in {arrSorted[ days ][ 1 ].capitalize()}.\n"
-                        f"Today there has been {arrSorted[ 0 ][ 2 ]} people hospitalized.")
+                        f"Today there has been {arrSorted[ 0 ][ 2 ]} people hospitalized.")  # f"Today the number of reported people are ")
             else:
                 return (f"{municipality.capitalize()}, {days} days ago:\n"
                         f"Today there have been {abs(difference)} less people hospitalized as on {arrSorted[ days ][ 0 ]} in {arrSorted[ days ][ 1 ].capitalize()}.\n"
