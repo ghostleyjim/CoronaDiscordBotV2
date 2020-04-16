@@ -45,11 +45,11 @@ def database_scrape():
     # RIVM website scraping
     # read file and check if date is already included today if not download and upload the file
     with open('data/RIVM.csv', 'r') as db:
-        update_date = datetime.datetime.today().strftime('%d-%m-%y;')
-        check_date = datetime.datetime.today().strftime('%d-%m-%y')
+        update_date = datetime.datetime.today().strftime('%Y-%m-%d;')
+        check_date = datetime.datetime.today().strftime('%Y-%m-%d')
         firstline = db.readlines()
         firstline = [ x.rstrip('\n') for x in firstline ]
-        firstline = [ x.split(';', 1)[ 0 ] for x in firstline ]
+        firstline = [ x.split(',', 1)[ 0 ] for x in firstline ]
         # RIVM only updates their database at 1400 so check if data is already in list and only update after 1400
         check = (True if (check_date not in firstline) and int(datetime.datetime.now().hour) >= 14 else False)
 
@@ -60,7 +60,7 @@ def database_scrape():
 
         results = soup.find(id="csvData")
 
-        RIVM = results.get_text().rstrip('\n')
+        RIVM = results.get_text().rstrip('\n').replace(';', ',')
 
         RIVM = RIVM.lower().split('\n')
 
