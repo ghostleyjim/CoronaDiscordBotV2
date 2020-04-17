@@ -142,14 +142,28 @@ def municipalitygraph(municipality):
 
     arrMunici = [ x for x in config.municipalities if x.name == municipality ]
     amount = [ int(x.hospitalised) for x in arrMunici ]
+    hospital_difference = [ [ amount[ x + 1 ] - amount[ x ] ] for x in range(len(amount)) if x < len(amount) - 1 ]
+    hospital_difference.insert(0, [ 0 ])
+    hospital_difference = [ y for x in hospital_difference for y in x ]
     besmettingen = [ int(x.besmettingen) for x in arrMunici ]
+    besmettingen_difference = [ [ besmettingen[ x + 1 ] - besmettingen[ x ] ] for x in range(len(besmettingen)) if x < len(besmettingen) - 1 ]
+    besmettingen_difference.insert(0, [ 0 ])
+    besmettingen_difference = [ y for x in besmettingen_difference for y in x ]
+    besmettingen_difference[ 13 ] = 0
+    doden = [ int(x.overleden) for x in arrMunici ]
+    overleden_difference = [ [ doden[ x + 1 ] - doden[ x ] ] for x in range(len(doden)) if x < len(doden) - 1 ]
+    overleden_difference.insert(0, [ 0 ])
+    overleden_difference = [ y for x in overleden_difference for y in x ]
+    overleden_difference[ 16 ] = 0
+
     dates = [ x.date for x in arrMunici ]
     ydates = [ x.strftime('%d-%m') for x in dates ]
+
     mungraph = plt.gcf()
     ax = mungraph.add_subplot()
     plt.plot_date(range(len(ydates)), amount, xdate=True, marker='x', label=f'People hospitalized in {municipality}', color='tab:blue', ls='solid')
-    plt.plot_date(range(len(ydates)), besmettingen, xdate=True, marker='x', label=f'People infected in {municipality}', color='tab:red', ls='solid')
-    plt.title(f'Daily hospitalized corona numbers for {municipality}', pad=13.0)
+    plt.plot_date(range(len(ydates)), besmettingen, xdate=True, marker='.', label=f'People infected in {municipality}', color='tab:red', ls='solid')
+    plt.title(f'Corona figures for {municipality}', pad=13.0)
     plt.xticks(range(len(ydates)), ydates, rotation=45)
 
     plt.legend()
@@ -157,11 +171,54 @@ def municipalitygraph(municipality):
         ax.text(i, v, v, ha="center")
     for i, v in enumerate(besmettingen):
         ax.text(i, v, v, ha="center")
-    fileName = "./graphs/MunicDaily.png"
-    mungraph.savefig(fileName, dpi=100, bbox_inches='tight')
+
+    mungraph_filename = "./graphs/MunicDaily.png"
+    mungraph.savefig(mungraph_filename, dpi=100, bbox_inches='tight')
 
     plt.clf()
 
-    return (fileName)
+    # grafiek met verschillen
+    dailydif = plt.gcf()
+    difax = mungraph.add_subplot()
+    plt.plot_date(range(len(ydates)), hospital_difference, xdate=True, marker='x', label=f'daily difference people hospitalized in {municipality}', color='tab:blue', ls='solid')
+    plt.plot_date(range(len(ydates)), besmettingen_difference, xdate=True, marker='.', label=f'daily difference people infected in {municipality}', color='tab:red', ls='solid')
+    plt.plot_date(range(len(ydates)), overleden_difference, xdate=True, marker='+', label=f'daily difference corona fatalities in {municipality}', color='k', ls='solid')
+    plt.title(f'Daily differences for {municipality}', pad=13.0)
+    plt.xticks(range(len(ydates)), ydates, rotation=45)
+
+    plt.legend()
+
+    for i, v in enumerate(hospital_difference):
+        difax.text(i, v + 0.5, v, ha="center", color='b')
+    for i, v in enumerate(besmettingen_difference):
+        difax.text(i, v + 0.5, v, ha="center", color='r')
+    for i, v in enumerate(overleden_difference):
+        difax.text(i, v + 0.5, v, ha="center", color='k')
+
+    dailydif_filename = "./graphs/difDaily.png"
+    dailydif.savefig(dailydif_filename, dpi=100, bbox_inches='tight')
+
+    plt.clf()
+
+    overleden = [ int(x.overleden) for x in arrMunici if int(x.overleden) != 0 ]
+    not_zero_dates = [ x.date for x in arrMunici if int(x.overleden) != 0 ]
+    ydates = [ x.strftime('%d-%m') for x in not_zero_dates ]
+    dailygraph = plt.gcf()
+    dayax = dailygraph.add_subplot()
+    plt.plot_date(range(len(ydates)), overleden, xdate=True, marker='.', label=f'Corona fatalaties in {municipality}', color='tab:gray', ls='solid')
+    plt.title(f'Corona fatality figures for {municipality}', pad=13.0)
+    plt.xticks(range(len(ydates)), ydates, rotation=45)
+
+    for i, v in enumerate(overleden):
+        dayax.text(i, v, v, ha="center")
+
+    dailygraph_filename = './graphs/MunDecDaily.png'
+    dailygraph.savefig(dailygraph_filename, dpi=100, bbox_inches='tight')
+
+    plt.clf()
+
+    file_names = (mungraph_filename, dailydif_filename, dailygraph_filename)
+
+    return file_names
 
 # createGraphs()

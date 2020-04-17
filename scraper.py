@@ -51,7 +51,7 @@ def database_scrape():
         firstline = [ x.rstrip('\n') for x in firstline ]
         firstline = [ x.split(',', 1)[ 0 ] for x in firstline ]
         # RIVM only updates their database at 1400 so check if data is already in list and only update after 1400
-        check = (True if (check_date not in firstline) and int(datetime.datetime.now().hour) >= 14 else False)
+        check = (True if (check_date not in firstline) and int(datetime.datetime.now().hour) >= 15 else False)
 
     if check:
         rivm_db = requests.get('https://www.rivm.nl/coronavirus-kaart-van-nederland-per-gemeente')
@@ -71,7 +71,6 @@ def database_scrape():
         with open("data/RIVM.csv", 'a') as db:
             inputdata = [ update_date + x for x in RIVM ]
             inputdata = '\n'.join(inputdata)
-            db.write('\n')
             print(inputdata, file=db, end='')
 
     # download new files and add file directory to directory.txt (for deleting)
@@ -115,7 +114,7 @@ def dataextract():
             # provincienaam = row[3].lower()
             # aantal = row[4]
 
-            config.municipalities.append(config.municipality(rowDate, row[ 2 ].lower(), row[ 1 ], row[ 10 ].lower(), row[ 4 ], row[ 6 ], row[ 3 ]))
+            config.municipalities.append(config.municipality(rowDate, row[ 2 ].lower(), row[ 1 ], '', row[ 4 ], row[ 6 ], row[ 3 ], '', row[ 5 ]))
 
             provinceExist = False
             for i in range(len(config.provinces)):
@@ -124,7 +123,7 @@ def dataextract():
                     config.provinces[ i ].hospitalised += int(row[ 4 ])
 
             if provinceExist == False:
-                config.provinces.append(config.province(rowDate, row[ 10 ].lower(), int(row[ 5 ])))
+                config.provinces.append(config.province(rowDate, '', int(row[ 5 ])))
 
 
 def returnmunicipality(municipality, days):
